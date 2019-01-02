@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _fs = require("fs");
 
 var _fs2 = _interopRequireDefault(_fs);
@@ -26,24 +28,36 @@ var DirWatcher = function (_EventEmitter) {
 
     var _this = _possibleConstructorReturn(this, (DirWatcher.__proto__ || Object.getPrototypeOf(DirWatcher)).call(this));
 
-    _this.watch = function (pathname, delay) {
-      var directoryFiles = new Set();
-      setInterval(function () {
-        return _fs2.default.readdir(pathname, function (err, files) {
-          if (err) console.error(err);
-          files.forEach(function (file) {
-            !directoryFiles.has(file) && _this.emit('changed', file);
-            directoryFiles.add(file);
-          });
-        });
-      }, delay);
-    };
-
     setInterval(function () {
       _this.emit("event");
     }, 1000);
     return _this;
   }
+
+  _createClass(DirWatcher, [{
+    key: "watch",
+    value: function watch(pathname, delay) {
+      var _this2 = this;
+
+      var directoryFiles = {};
+      setInterval(function () {
+        return _fs2.default.readdir(pathname, function (err, files) {
+          if (err) console.error(err);
+          files.forEach(function (file) {
+            var filePath = pathname + "/" + file;
+            var filename = file.split(".")[0];
+
+            var stats = _fs2.default.statSync(filePath);
+            var mtime = new Date(stats.mtime);
+            if (!directoryFiles[filename] || directoryFiles[filename].getTime() !== mtime.getTime()) {
+              _this2.emit("changed", file);
+              directoryFiles[filename] = mtime;
+            }
+          });
+        });
+      }, delay);
+    }
+  }]);
 
   return DirWatcher;
 }(_events.EventEmitter);

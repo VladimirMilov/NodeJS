@@ -61,6 +61,7 @@ var Importer = function Importer() {
   fileWatcher.watch(SVG_FOLDER, 500);
 
   fileWatcher.on("changed", function (filename) {
+    console.log('File has been changed');
     var filePath = _path2.default.join(SVG_FOLDER, filename);
     var result = _this.import(filePath);
     result.then(function (json) {

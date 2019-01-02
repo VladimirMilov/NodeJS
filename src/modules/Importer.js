@@ -10,6 +10,7 @@ export default class Importer {
     fileWatcher.watch(SVG_FOLDER, 500);
 
     fileWatcher.on("changed", (filename) => {
+      console.log('File has been changed!');
       const filePath = path.join(SVG_FOLDER, filename);
       const result = this.import(filePath);
       result.then(json => console.log("Content: \n", json));
