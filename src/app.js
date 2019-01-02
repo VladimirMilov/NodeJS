@@ -1,7 +1,8 @@
-import configs from '../config/configs';
 import { User, Product } from './models';
-
-console.log(configs.name);
+import { DirWatcher, Importer } from './modules';
+import "@babel/polyfill";
 
 new User();
 new Product();
+new DirWatcher();
+new Importer();

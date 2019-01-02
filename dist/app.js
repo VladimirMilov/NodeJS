@@ -1,14 +1,12 @@
 'use strict';
 
-var _configs = require('../config/configs');
-
-var _configs2 = _interopRequireDefault(_configs);
-
 var _models = require('./models');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _modules = require('./modules');
 
-console.log(_configs2.default.name);
+require('@babel/polyfill');
 
 new _models.User();
 new _models.Product();
+new _modules.DirWatcher();
+new _modules.Importer();
