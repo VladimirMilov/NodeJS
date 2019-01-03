@@ -1,11 +1,10 @@
 import fs from "fs";
-import { EventEmitter } from "events";
-export default class DirWatcher extends EventEmitter {
-  constructor() {
-    super();
-    setInterval(() => {
-      this.emit("event");
-    }, 1000);
+import { SVG_FOLDER } from '../app';
+
+export default class DirWatcher {
+  constructor(event) {
+    this.event = event;  
+    this.watch(SVG_FOLDER, 500); 
   }
 
   watch(pathname, delay) {
@@ -25,7 +24,7 @@ export default class DirWatcher extends EventEmitter {
               !directoryFiles[filename] ||
               directoryFiles[filename].getTime() !== mtime.getTime()
             ) {
-              this.emit("changed", file);
+              this.event.emit("changed", file);
               directoryFiles[filename] = mtime;
             }
           });
